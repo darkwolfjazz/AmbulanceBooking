@@ -53,12 +53,17 @@ public class AmbulanceService {
          Optional<AmbulanceEntity> existingEntity= ambulanceRepository.findById(id);
          if(existingEntity.isPresent()){
              AmbulanceEntity currentEntity=existingEntity.get();
-             updatedEntity.setAddress(currentEntity.getAddress());
-             updatedEntity.setCost(currentEntity.getCost());
-             updatedEntity.setAvailable(currentEntity.isAvailable());
-             updatedEntity.setPatient_name(currentEntity.getPatient_name());
-             updatedEntity.setHospital_name(currentEntity.getHospital_name());
-             ambulanceRepository.save(updatedEntity);
+             currentEntity.setPatient_name(updatedEntity.getPatient_name());
+             currentEntity.setCost(updatedEntity.getCost());
+             currentEntity.setAvailable(updatedEntity.isAvailable());
+             currentEntity.setHospital_name(updatedEntity.getHospital_name());
+             currentEntity.setAddress(updatedEntity.getAddress());
+             if(currentEntity.isAvailable()){
+                 currentEntity.setStatus("Confirmed");
+             }else{
+                 currentEntity.setStatus("Pending");
+             }
+             ambulanceRepository.save(currentEntity);
          }else {
              throw new RuntimeException();
          }
