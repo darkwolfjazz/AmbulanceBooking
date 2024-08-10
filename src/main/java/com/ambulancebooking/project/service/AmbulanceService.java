@@ -65,7 +65,7 @@ public class AmbulanceService {
              }
              ambulanceRepository.save(currentEntity);
          }else {
-             throw new RuntimeException();
+             throw new RuntimeException("Booking with this id not Found!");
          }
          logger.info("AmbulanceService - updateambulanceentry - ends" );
          return updatedEntity;
