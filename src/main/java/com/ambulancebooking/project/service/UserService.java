@@ -32,6 +32,25 @@ public class UserService {
         return updatedUser;
     }
 
+    public String loginUser(String email,String password){
+        Optional<UserEntity> user=userRepository.findByEmail(email);
+        if(user.isPresent()){
+            UserEntity currentUser=user.get();
+//            System.out.println("User found with email: " + currentUser.getEmail());
+//            System.out.println("Stored password: " + currentUser.getPassword());
+//            System.out.println("Provided password: " + password);
+            if(currentUser.getPassword().equals(password)){
+                //System.out.println("Password match successful");
+                return "Success";
+            }else{
+                //System.out.println("Password match failed");
+                return "Failure";
+            }
+        }
+        return "No user is present";
+    }
+
+
 
 
 }

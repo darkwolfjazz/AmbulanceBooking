@@ -1,0 +1,41 @@
+[33mcommit 919cb78b713724ae5836037ce676da70297e44d3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: darkwolfjazz <1906349@kiit.ac.in>
+Date:   Sat Aug 10 19:02:27 2024 +0530
+
+    Added emailing system for new users on Signup
+
+[33mcommit aa56f8e0a96ec359ae7ffb1fe5a19e5ec7c02c8d[m
+Author: darkwolfjazz <1906349@kiit.ac.in>
+Date:   Sat Aug 10 17:41:47 2024 +0530
+
+    Fixed the update issue and made userDB
+
+[33mcommit 9e8bc4d713063eb23d9de319d88770a57cc65260[m
+Author: darkwolfjazz <1906349@kiit.ac.in>
+Date:   Thu Aug 8 14:09:04 2024 +0530
+
+    Added loggers for the project
+
+[33mcommit 886658f419229ec7cc6a8f5de3122f8c635c0efb[m
+Author: darkwolfjazz <1906349@kiit.ac.in>
+Date:   Thu Aug 8 14:05:34 2024 +0530
+
+    Updated application.properties locally
+
+[33mcommit 9b3ede5ca4e88b3b85d1e679603aa3b91e9f4474[m
+Author: darkwolfjazz <1906349@kiit.ac.in>
+Date:   Thu Aug 8 14:02:01 2024 +0530
+
+    Added loggers to project
+
+[33mcommit c4907b84280dbb6fca671d8bc57ef43b4407d7c2[m
+Author: darkwolfjazz <1906349@kiit.ac.in>
+Date:   Wed Aug 7 17:44:57 2024 +0530
+
+    Initial MVP
+
+[33mcommit 479b47a1698c1f5b8a557245b54219a9d36991a0[m
+Author: darkwolfjazz <1906349@kiit.ac.in>
+Date:   Wed Aug 7 17:40:26 2024 +0530
+
+    mvp

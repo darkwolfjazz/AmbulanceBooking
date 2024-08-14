@@ -1,6 +1,5 @@
 package com.ambulancebooking.project.controller;
 
-import com.ambulancebooking.project.entity.AmbulanceEntity;
 import com.ambulancebooking.project.entity.UserEntity;
 import com.ambulancebooking.project.service.EmailService;
 import com.ambulancebooking.project.service.UserService;
@@ -29,6 +28,13 @@ private UserService userService;
      return "Credentials have been reset";
 }
 
-
-
+@PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestParam String email, @RequestParam String password){
+    String result= userService.loginUser(email, password);
+    if("Success".equals(result)){
+        return ResponseEntity.ok("Login successful!, Welcome");
+    }else{
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
+    }
+}
 }
