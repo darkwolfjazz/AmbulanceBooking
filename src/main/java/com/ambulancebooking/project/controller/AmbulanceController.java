@@ -2,6 +2,7 @@ package com.ambulancebooking.project.controller;
 
 import com.ambulancebooking.project.entity.AmbulanceEntity;
 import com.ambulancebooking.project.service.AmbulanceService;
+import jakarta.validation.Valid;
 import org.apache.logging.log4j.message.Message;
 import org.apache.tomcat.util.json.JSONParser;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class AmbulanceController {
     private AmbulanceService ambulanceService;
 
  @PostMapping("/bookAmbulance")
-   public ResponseEntity<AmbulanceEntity>bookAmbulanceforUser(@RequestBody AmbulanceEntity ambulanceEntity){
+   public ResponseEntity<AmbulanceEntity>bookAmbulanceforUser(@Valid @RequestBody AmbulanceEntity ambulanceEntity){
      logger.info("Inside a post request");
      AmbulanceEntity bookedAmbulance=ambulanceService.bookAmbulance(ambulanceEntity);
      return new ResponseEntity<>(bookedAmbulance,HttpStatus.CREATED);
@@ -54,7 +55,7 @@ public class AmbulanceController {
  }
 
  @PutMapping("/updateBooking/{id}")
-    public String updateBookingById(@PathVariable Long id,@RequestBody AmbulanceEntity ambulanceEntity){
+    public String updateBookingById(@PathVariable Long id,@Valid @RequestBody AmbulanceEntity ambulanceEntity){
      logger.info("Inside a put request");
     ambulanceService.updateambulanceentry(id, ambulanceEntity);
      return "Your booking is modified";

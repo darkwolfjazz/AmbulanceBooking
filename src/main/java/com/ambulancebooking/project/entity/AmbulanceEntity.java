@@ -1,6 +1,8 @@
 package com.ambulancebooking.project.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +17,13 @@ public class AmbulanceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long booking_id;
+    @NotBlank(message = "Patient name cannot be blank")
     private String patient_name;
+    @NotBlank(message = "Address cannot be blank")
     private String address;
+    @NotBlank(message = "Hospital name cannot be blank")
     private String hospital_name;
+    @NotNull(message = "Enter a valid cost")
     private int cost;
     @Column(name = "available", columnDefinition = "TINYINT(1)")
     private boolean available;

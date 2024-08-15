@@ -37,3 +37,6 @@ logs/
 
 # Ignore application.properties
 src/main/resources/application.properties
+
+#ingore pom.xml
+pom.xml
