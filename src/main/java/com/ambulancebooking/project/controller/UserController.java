@@ -19,7 +19,7 @@ private UserService userService;
 @PostMapping("/signup")
     public ResponseEntity<UserEntity> createUser(@Valid @RequestBody UserEntity userEntity) {
     UserEntity user= userService.SignupUser(userEntity);
-    emailService.sendWelcomeMessage(user.getEmail());
+    emailService.sendWelcomeMessage(user.getEmail(), user.getUserName());
     return new ResponseEntity<>(user,HttpStatus.CREATED);
 }
 
