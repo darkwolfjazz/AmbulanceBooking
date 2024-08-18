@@ -3,6 +3,7 @@ package com.ambulancebooking.project.service;
 import com.ambulancebooking.project.entity.UserEntity;
 import com.ambulancebooking.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,7 +13,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public UserEntity SignupUser(UserEntity userEntity){
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         return userRepository.save(userEntity);
     }
 
@@ -32,25 +38,14 @@ public class UserService {
         return updatedUser;
     }
 
-    public String loginUser(String email,String password){
-        Optional<UserEntity> user=userRepository.findByEmail(email);
-        if(user.isPresent()){
-            UserEntity currentUser=user.get();
-//            System.out.println("User found with email: " + currentUser.getEmail());
-//            System.out.println("Stored password: " + currentUser.getPassword());
-//            System.out.println("Provided password: " + password);
-            if(currentUser.getPassword().equals(password)){
-                //System.out.println("Password match successful");
-                return "Success";
-            }else{
-                //System.out.println("Password match failed");
-                return "Failure";
+    public UserEntity loginUser(String email, String password) {
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            UserEntity currentUser = user.get();
+            if (passwordEncoder.matches(password, currentUser.getPassword())) {
+                return currentUser; // Return the user if the login is successful
             }
         }
-        return "No user is present";
+        return null; // Return null if login fails
     }
-
-
-
-
 }

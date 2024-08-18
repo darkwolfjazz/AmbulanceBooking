@@ -29,13 +29,15 @@ private UserService userService;
      return "Credentials have been reset";
 }
 
-@PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestParam String email, @RequestParam String password){
-    String result= userService.loginUser(email, password);
-    if("Success".equals(result)){
-        return ResponseEntity.ok("Login successful!, Welcome");
-    }else{
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestParam String email, @RequestParam String password) {
+        UserEntity user = userService.loginUser(email, password);
+        if (user != null) {
+            String userName = user.getUserName();
+            return ResponseEntity.ok("Login successful! Welcome " + userName);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
+        }
     }
-}
+
 }
