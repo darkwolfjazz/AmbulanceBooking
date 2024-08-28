@@ -1,8 +1,11 @@
 package com.ambulancebooking.project.service;
 
 import com.ambulancebooking.project.entity.UserEntity;
+import com.ambulancebooking.project.jwt.JwtHelper;
 import com.ambulancebooking.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,12 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtHelper jwtHelper;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public UserEntity SignupUser(UserEntity userEntity){
@@ -23,27 +32,25 @@ public class UserService {
     }
 
     //Newly added feature still to work on-------------------------------
-    public UserEntity updateUserCredentials(Long id,UserEntity updatedUser){
-        Optional<UserEntity> existinguser = userRepository.findById(id);
-        if(existinguser.isPresent()) {
-            UserEntity currentUser = existinguser.get();
-            currentUser.setUserName(updatedUser.getUserName());
-            currentUser.setEmail(updatedUser.getEmail());
-            currentUser.setPassword(updatedUser.getPassword());
-            currentUser.setContactNumber(updatedUser.getContactNumber());
-            userRepository.save(currentUser);
-        }else {
-            throw new RuntimeException("User not found!");
+    public void updateUserCredentials(Long userId, UserEntity user) {
+        UserEntity existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        // Hash the password before saving
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        return updatedUser;
+        // Update other fields if needed
+        userRepository.save(existingUser);
     }
 
-    public UserEntity loginUser(String email, String password) {
+    public String loginUser(String email, String password) {
         Optional<UserEntity> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             UserEntity currentUser = user.get();
             if (passwordEncoder.matches(password, currentUser.getPassword())) {
-                return currentUser; // Return the user if the login is successful
+                // Generate and return the JWT token
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                return jwtHelper.generateToken(userDetails);
             }
         }
         return null; // Return null if login fails
