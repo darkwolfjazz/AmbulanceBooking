@@ -37,7 +37,6 @@ public class AmbulanceController {
 
  @GetMapping("/bookings")
     public List<AmbulanceEntity> getAllBookings(){
-     logger.info("Inside a get request, returns all bookings");
      return ambulanceService.seeAllBookings();
  }
 

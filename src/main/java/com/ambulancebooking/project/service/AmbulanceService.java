@@ -6,7 +6,11 @@ import com.ambulancebooking.project.repository.AmbulanceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -33,21 +37,24 @@ public class AmbulanceService {
          logger.info("AmbulanceService - bookAmbulance - ends" );
         return ambulanceEntity;
      }
-
+    @Cacheable(value = "bookings")
      public List<AmbulanceEntity> seeAllBookings(){
-         logger.info("AmbulanceService - seeAllBookings " );
         return ambulanceRepository.findByAvailableTrue();
      }
-
+    @Cacheable(value = "bookings", key = "#id")
      public Optional<AmbulanceEntity> seeAllBookingsByID(Long id){
          logger.info("AmbulanceService - seeAllBookingsById - starts" );
          return ambulanceRepository.findById(id);
 
      }
-     public void deleteById(Long id){
+
+    @CacheEvict(value = "bookings", key = "#id")
+    public void deleteById(Long id){
          logger.info("AmbulanceService - deleteById - starts" );
          ambulanceRepository.deleteById(id);
      }
+
+    @CachePut(value = "bookings", key = "#id")
      public AmbulanceEntity updateambulanceentry(Long id, AmbulanceEntity updatedEntity){
          logger.info("AmbulanceService - updateambulanceentry - starts" );
          Optional<AmbulanceEntity> existingEntity= ambulanceRepository.findById(id);
