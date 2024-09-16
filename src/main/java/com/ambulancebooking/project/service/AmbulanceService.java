@@ -1,30 +1,60 @@
 package com.ambulancebooking.project.service;
 
-import com.ambulancebooking.project.controller.AmbulanceController;
+import com.ambulancebooking.project.Config.HospitalResponse;
 import com.ambulancebooking.project.entity.AmbulanceEntity;
 import com.ambulancebooking.project.repository.AmbulanceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AmbulanceService {
 
-
     Logger logger= LoggerFactory.getLogger(AmbulanceService.class);
 
-  @Autowired
+    @Autowired
     private AmbulanceRepository ambulanceRepository;
 
-     public AmbulanceEntity bookAmbulance(AmbulanceEntity ambulanceEntity){
+    @Value("${google.places.api.url}")
+    private String googlePlacesApiUrl;
+
+    @Value("${google.places.api.key}")
+    private String googlePlacesApiKey;
+
+    public List<String>getNearbyHospitals(String location){
+        RestTemplate restTemplate=new RestTemplate();
+        String url=UriComponentsBuilder.fromHttpUrl(googlePlacesApiUrl)
+                .queryParam("location", location )
+                .queryParam("radius" , 5000)
+                .queryParam("type","hospital")
+                .queryParam("keyword","hospital")
+                .queryParam("key",googlePlacesApiKey)
+                .toUriString();
+
+        HospitalResponse response=restTemplate.getForObject(url, HospitalResponse.class);
+        if(response!=null && "OK".equals(response.getStatus())){
+            return response.getResults().stream()
+                    .map(hospital -> hospital.getName() + " - " + hospital.getVicinity())
+                    .toList();
+        }else {
+            logger.error("Error fetching hospitals : " + response!=null? response.getStatus() : "No response");
+            return List.of("No hospitals found or an error occurred.");
+        }
+    }
+
+    public AmbulanceEntity bookAmbulance(AmbulanceEntity ambulanceEntity){
 
          logger.info("AmbulanceService - bookAmbulance - starts" );
 

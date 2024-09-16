@@ -59,4 +59,11 @@ public class AmbulanceController {
     ambulanceService.updateambulanceentry(id, ambulanceEntity);
      return "Your booking is modified";
  }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<List<String>> getNearbyHospitals(@RequestParam String location) {
+        List<String> hospitals = ambulanceService.getNearbyHospitals(location);
+        return new ResponseEntity<>(hospitals, HttpStatus.OK);
+    }
+
 }

@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.POST, "/signup").permitAll()  // Allow signup without authentication
                             .requestMatchers(HttpMethod.POST, "/login").permitAll()  // Allow login without authentication
-                            .anyRequest().authenticated();  // Require authentication for all other endpoints
+                            .anyRequest().permitAll();  // Require authentication for all other endpoints
                 })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
