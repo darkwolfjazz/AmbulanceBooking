@@ -3,8 +3,6 @@ package com.ambulancebooking.project.controller;
 import com.ambulancebooking.project.entity.AmbulanceEntity;
 import com.ambulancebooking.project.service.AmbulanceService;
 import jakarta.validation.Valid;
-import org.apache.logging.log4j.message.Message;
-import org.apache.tomcat.util.json.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -41,23 +37,39 @@ public class AmbulanceController {
  }
 
  @GetMapping("/bookings/{id}")
-    public Optional<AmbulanceEntity> getBookingById(@PathVariable Long id){
+    public ResponseEntity<?> getBookingById(@PathVariable Long id){
      logger.info("Returning bookings by id");
-     return ambulanceService.seeAllBookingsByID(id);
+     Optional<AmbulanceEntity>booking=ambulanceService.seeAllBookingsByID(id);
+     if(booking.isPresent()){
+         return ResponseEntity.ok(booking.get());
+     }else{
+         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found with " + id);
+                  // Custom message for not found
+     }
  }
 
  @DeleteMapping("/delete/{id}")
- public String DeleteRequestforAmbulance(@PathVariable Long id){
+ public ResponseEntity<?> DeleteRequestforAmbulance(@PathVariable Long id) {
      logger.info("deletes booking by id");
-     ambulanceService.deleteById(id);
-     return "Your booking is cancelled";
+     Optional<AmbulanceEntity> deletebooking = ambulanceService.seeAllBookingsByID(id);
+     if (deletebooking.isPresent()) {
+         ambulanceService.deleteById(id);
+         return ResponseEntity.ok("Your booking is cancelled");
+     } else {
+         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot delete booking with id" + id);
+     }
  }
 
  @PutMapping("/updateBooking/{id}")
-    public String updateBookingById(@PathVariable Long id,@Valid @RequestBody AmbulanceEntity ambulanceEntity){
+    public ResponseEntity<?> updateBookingById(@PathVariable Long id,@Valid @RequestBody AmbulanceEntity ambulanceEntity){
      logger.info("Inside a put request");
-    ambulanceService.updateambulanceentry(id, ambulanceEntity);
-     return "Your booking is modified";
+    Optional<AmbulanceEntity>updateBooking=ambulanceService.seeAllBookingsByID(id);
+    if(updateBooking.isPresent()) {
+        ambulanceService.updateambulanceentry(id, ambulanceEntity);
+        return ResponseEntity.ok("Your booking is modified");
+    }else{
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking with " + id + "Cannot be modified");
+    }
  }
 
     @GetMapping("/nearby")
